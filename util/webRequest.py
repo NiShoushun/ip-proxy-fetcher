@@ -69,7 +69,7 @@ class WebRequest(object):
                 retry_time -= 1
                 if retry_time <= 0:
                     return None
-                self.log.info("retry %s second after" % base_interval)
+                self.log.debug("retry %s second after" % base_interval)
                 base_interval += 2
                 time.sleep(base_interval)
 

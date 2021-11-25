@@ -109,6 +109,17 @@ class Configuration:
     def max_cached_proxy(self):
         return self.__cfg.get("max_cached_proxy_size", 1000)
 
+
+
+    @LazyProperty
+    def fetch_job_interval(self):
+        return self.__cfg.get("fetch_job_interval", 2*60)
+
+    @LazyProperty
+    def check_job_interval(self):
+        return self.__cfg.get("check_job_interval", 3*60)
+
+
 def print_config(self):
     pprint(self.__cfg)
 

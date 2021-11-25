@@ -160,14 +160,13 @@ def freeProxy08():
     urls = ['https://ip.ihuan.me/address/5Lit5Zu9.html']
     for url in urls:
         r = WebRequest().get(url, timeout=10)
-        r = WebRequest().get(url + f"&page={i}", timeout=10)
         # proxies = re.findall(r'<td>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})</td>[\s\S]*?<td>(\d+)</td>', r.text)
         # for proxy in proxies:
         #
         #     yield ":".join(proxy)
         tree = r.tree
         proxy_list = tree.xpath('.//table//tr')
-        sleep(1)  # 必须sleep 不然第二条请求不到数据
+        print(proxy_list)
         for tree in proxy_list[1:]:
             ip = "".join(tree.xpath('./td[1]/text()'))
             port = "".join(tree.xpath('./td[2]/text()'))
@@ -175,6 +174,7 @@ def freeProxy08():
             anonymous = "".join(tree.xpath('./td[3]/text()')).strip()
             proxy_type = "".join(tree.xpath('./td[4]/text()')).strip()
             region = "".join(tree.xpath('./td[5]/text()')).strip()
+            print(ip,port,proxy,anonymous,proxy_type,region)
             yield proxy, proxy_type, anonymous, region
 
 
@@ -196,11 +196,10 @@ def freeProxy09():
             proxy = ip + ":" + port
             anonymous = ""
             proxy_type = ""
-            # region = "".join(tree.xpath('./td[3]/text()')).strip()
-            # server = "".join(tree.xpath('./td[4]/text()')).strip()
-            region = ""
-            server = ""
-            yield proxy, proxy_type, anonymous, region
+            region = "".join(tree.xpath('./td[3]/text()')).strip()
+            server = "".join(tree.xpath('./td[4]/text()')).strip()
+
+            yield proxy, proxy_type, anonymous, region+" "+server
 
     # @staticmethod
     # def wallProxy01():

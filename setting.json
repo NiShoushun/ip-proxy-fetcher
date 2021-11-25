@@ -6,14 +6,13 @@
   "table_name": "default_pool",
   "proxy_src": [
       "freeProxy01",
-      "freeProxy02",
-      "freeProxy03",
-      "freeProxy04",
-      "freeProxy05",
-      "freeProxy06",
-      "freeProxy07",
-      "freeProxy08",
-      "freeProxy09"
+    "freeProxy02",
+    "freeProxy03",
+    "freeProxy04",
+    "freeProxy05",
+    "freeProxy06",
+    "freeProxy07"
+
   ],
 
   "http_test_url": "http://httpbin.org",
@@ -22,18 +21,21 @@
   "verify_timeout": 10,
   "max_fail_count": 0,
   "pool_size_min": 20,
-  "timezone": "Asia/Shanghai",
 
-  "max_cached_proxy_size ": 100,
+  "max_cached_proxy_size ": 10000,
 
   "log_format": "%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s",
   "logfile_format": "file %(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s",
-  "log_level": "INFO",
+  "log_level": "DEBUG",
   "log_to_file": true,
 
   "fetch_thread_num": 20,
   "check_thread_num": 20,
-  "process_pool_max_worker": 5
+  "process_pool_max_worker": 5,
+  "fetch_job_interval": 60,
+  "check_job_interval": 90,
+
+  "timezone": "Asia/Shanghai"
 }
 
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import logging
+import threading
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.executors.pool import ProcessPoolExecutor
@@ -13,21 +13,34 @@ from util.logging import Logger
 from config.configuration import default_config as config
 
 
-
-
 def __runProxyFetch():
-    proxy_fetcher = Fetcher()
+    """
+    抓取并检查ip proxy
+    """
     cached_proxy_queue = Queue(maxsize=config.max_cached_proxy)
+
+    def check():
+        Checker('raw', cached_proxy_queue)
+
+    checkJob = threading.Thread(target=check)
+    checkJob.setDaemon(True)
+    checkJob.start()
+    proxy_fetcher = Fetcher()
+
     for proxy in proxy_fetcher.run():
         cached_proxy_queue.put(proxy)
-    Checker('raw', cached_proxy_queue)
 
 
 def __runProxyCheck():
+    """
+    检查数据库已有ip proxy
+    """
     proxy_handler = ProxyDBHandler()
     proxy_queue = Queue()
+    # 如果数据库中的数据量过小，则进行抓取活动
     if proxy_handler.db.getCount().get("total", 0) < proxy_handler.conf.poolSizeMin:
         __runProxyFetch()
+    # 从数据库中取出ip proxy 再次就你行检验
     for proxy in proxy_handler.getAll():
         proxy_queue.put(proxy)
     Checker('use', proxy_queue)
@@ -42,11 +55,11 @@ def runScheduler():
     __runProxyFetch()
 
     timezone = config.timezone
-    scheduler_log = Logger("scheduler", color=color.BLUE, file=config.log_to_file, level=logging.INFO)
+    scheduler_log = Logger("scheduler", color=color.BLUE, file=config.log_to_file, level=config.log_level)
     scheduler = BlockingScheduler(logger=scheduler_log, timezone=timezone)
 
-    scheduler.add_job(__runProxyFetch, 'interval', minutes=4, id="proxy_fetch", name="proxy采集")
-    scheduler.add_job(__runProxyCheck, 'interval', minutes=2, id="proxy_check", name="proxy检查")
+    scheduler.add_job(__runProxyFetch, 'interval', seconds=config.fetch_job_interval, id="proxy_fetch", name="proxy采集")
+    scheduler.add_job(__runProxyCheck, 'interval', seconds=config.check_job_interval, id="proxy_check", name="proxy检查")
     executors = {
         'default': {'type': 'threadpool', 'max_workers': config.fetch_thread_num},
         'processpool': ProcessPoolExecutor(max_workers=config.process_pool_max_worker)
