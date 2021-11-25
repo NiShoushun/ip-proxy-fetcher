@@ -25,6 +25,9 @@ class IpProxyFilter(object):
             Proxy Object
         """
         # 按照http方式检验，如果不通过再按照https方式检验
+        if proxy.type.lower() == "sock4":
+            # todo 校验sock类型代理
+            return proxy
         http_r = cls.httpValidate(proxy)
         https_r = False if not http_r else cls.httpsValidate(proxy)
 
