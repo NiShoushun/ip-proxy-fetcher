@@ -6,7 +6,7 @@ from apscheduler.executors.pool import ProcessPoolExecutor
 
 from queue import Queue
 from core.fetcher import Fetcher
-from core.filter import Checker
+from core.checker import Checker
 from core.DB_handle import ProxyDBHandler
 from util import color
 from util.logging import Logger

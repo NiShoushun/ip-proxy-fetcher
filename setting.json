@@ -5,13 +5,13 @@
   "connect":"redis://:123456@127.0.0.1:6379/0",
   "table_name": "default_pool",
   "proxy_src": [
-      "freeProxy01",
-    "freeProxy02",
-    "freeProxy03",
-    "freeProxy04",
-    "freeProxy05",
-    "freeProxy06",
-    "freeProxy07"
+      "freeProxyFetcher01",
+    "freeProxyFetcher02",
+    "freeProxyFetcher03",
+    "freeProxyFetcher04",
+    "freeProxyFetcher05",
+    "freeProxyFetcher06",
+    "freeProxyFetcher07"
 
   ],
 
@@ -25,7 +25,7 @@
   "max_cached_proxy_size ": 10000,
 
   "log_format": "%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s",
-  "logfile_format": "file %(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s",
+  "logfile_format": "%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s",
   "log_level": "DEBUG",
   "log_to_file": true,
 

@@ -43,6 +43,14 @@ class ProxyDBHandler(object):
         """
         self.db.put(proxy)
 
+    def update(self, proxy):
+        """
+        put proxy into use proxy
+        :return:
+        """
+        self.db.update(proxy)
+
+
     def delete(self, proxy):
         """
         delete useful proxy

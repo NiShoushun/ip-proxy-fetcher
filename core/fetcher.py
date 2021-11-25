@@ -5,7 +5,7 @@ from threading import Thread
 
 import proxy_src
 from core.proxy import Proxy
-from core.filter import IpProxyFilter
+from core.checker import IpProxyFilter
 from util.logging import Logger
 from core.DB_handle import ProxyDBHandler
 from config.configuration import default_config as config

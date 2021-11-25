@@ -10,7 +10,7 @@ from util.webRequest import WebRequest
 """
 
 
-def freeProxy01():
+def freeProxyFetcher01():
     """
     米扑代理 https://proxy.mimvp.com/ 只能访问第一页免费ip
     :return:
@@ -38,7 +38,7 @@ def freeProxy01():
                 break
 
 
-def freeProxy02():
+def freeProxyFetcher02():
     """
     代理66 http://www.66ip.cn/
     :return:
@@ -54,7 +54,7 @@ def freeProxy02():
         yield proxy, proxy_type, anonymous, region
 
 
-def freeProxy03():
+def freeProxyFetcher03():
     """ 开心代理 """
     target_urls = ["http://www.kxdaili.com/dailiip/1/", "http://www.kxdaili.com/dailiip/2/"]
     max_page = 10
@@ -73,7 +73,7 @@ def freeProxy03():
                 yield proxy, proxy_type, anonymous, region
 
 
-def freeProxy04():
+def freeProxyFetcher04():
     """ 蝶鸟IP https://www.dieniao.com/FreeProxy/2.html"""
     url = "https://www.dieniao.com/FreeProxy.html"
     max_page = 10
@@ -90,7 +90,7 @@ def freeProxy04():
             yield proxy, proxy_type, anonymous, region + " " + server
 
 
-def freeProxy05():
+def freeProxyFetcher05():
     """ 快代理 https://www.kuaidaili.com """
     url_pattern = [
         'https://www.kuaidaili.com/free/inha/',
@@ -113,7 +113,7 @@ def freeProxy05():
                 break
 
 
-def freeProxy06():
+def freeProxyFetcher06():
     """ PROXY11 https://proxy11.com """
     url = "https://proxy11.com/api/demoweb/proxy.json?country=hk&speed=2000"
     try:
@@ -128,7 +128,7 @@ def freeProxy06():
         return
 
 
-def freeProxy07():
+def freeProxyFetcher07():
     """ 云代理 """
     urls = ['http://www.ip3366.net/free/?stype=1', "http://www.ip3366.net/free/?stype=2"]
     max_page = 7
@@ -155,7 +155,7 @@ def freeProxy07():
             break
 
 
-def freeProxy08():
+def freeProxyFetcher08():
     """ 小幻代理 """
     urls = ['https://ip.ihuan.me/address/5Lit5Zu9.html']
     for url in urls:
@@ -178,7 +178,7 @@ def freeProxy08():
             yield proxy, proxy_type, anonymous, region
 
 
-def freeProxy09():
+def freeProxyFetcher09():
     """ 89免费代理 """
     max_page = 50
     for i in range(1, max_page + 1):

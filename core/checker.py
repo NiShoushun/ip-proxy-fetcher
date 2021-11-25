@@ -96,6 +96,9 @@ class _ThreadChecker(Thread):
             self.target_queue.task_done()
 
     def __ifRaw(self, proxy):
+        """
+        在抓取时，存入检查通过的代理
+        """
         if proxy.last_status:
             if self.proxy_handler.exists(proxy):
                 self.log.info('RawProxyCheck - {}: {} {}'.format(self.name, proxy.proxy.ljust(23), color.red('aleady in DB')))
@@ -107,9 +110,13 @@ class _ThreadChecker(Thread):
             self.log.info('RawProxyCheck - {}: {} {}'.format(self.name, proxy.proxy.ljust(23), color.red('fail')))
 
     def __ifUse(self, proxy):
+        """
+        通过检查结果，更新代理
+        """
         if proxy.last_status:
-            self.log.info('UseProxyCheck - {}: {} pass'.format(self.name, proxy.proxy.ljust(23)))
-            self.proxy_handler.put(proxy)
+            self.log.info(
+                'UseProxyCheck - {}: {} {}'.format(self.name, proxy.proxy.ljust(23), color.yellow('recheck pass')))
+            self.proxy_handler.update(proxy)
         else:
             #
             if proxy.fail_count > self.conf.maxFailCount:
@@ -121,7 +128,7 @@ class _ThreadChecker(Thread):
                 self.log.info('UseProxyCheck - {}: {} fail, count {} keep'.format(self.name,
                                                                                   proxy.proxy.ljust(23),
                                                                                   proxy.fail_count))
-                self.proxy_handler.put(proxy)
+                self.proxy_handler.update(proxy)
 
 
 def Checker(tp, queue):

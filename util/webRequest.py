@@ -9,13 +9,14 @@ import time
 
 from util.logging import Logger
 from util import color
+from config.configuration import default_config as config
 
 
 class WebRequest(object):
     name = "web_request"
 
     def __init__(self, *args, **kwargs):
-        self.log = Logger(self.name, color=color.RESET, file=False)
+        self.log = Logger(self.name, color=color.RESET,level=config.log_level, file=False)
         self.response = Response()
 
     @property
@@ -65,7 +66,7 @@ class WebRequest(object):
                 self.response = requests.get(url, headers=headers, timeout=timeout, *args, **kwargs)
                 return self
             except Exception as e:
-                self.log.error("requests: %s error: %s" % (url, str(e)))
+                self.log.debug("requests: %s error: %s" % (url, str(e)))
                 retry_time -= 1
                 if retry_time <= 0:
                     return None

@@ -35,7 +35,7 @@ class Proxy(object):
                    )
 
     @property
-    def proxy(self):
+    def proxy(self) -> str:
         """ 代理 ip:port """
         return self._proxy
 
