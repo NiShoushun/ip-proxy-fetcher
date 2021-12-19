@@ -4,20 +4,20 @@ from db import redisClient
 from util import color
 from util.logging import Logger
 from config.configuration import default_config as config
+from api import proxyApi
+from core import scheduler
 
 log = Logger('launcher', level=config.log_level, file=config.log_to_file, color=color.YELLOW)
 
 
 def startServer():
     __beforeStart()
-    from api.proxyApi import start_server
-    start_server()
+    proxyApi.start()
 
 
 def startScheduler():
     __beforeStart()
-    from core.scheduler import runScheduler
-    runScheduler()
+    scheduler.start()
 
 
 def __beforeStart():
@@ -34,10 +34,10 @@ def print_version():
 
 def print_config():
     conf = config
-    log.info("ProxyPool configure HOST: %s" % conf.serverHost)
-    log.info("ProxyPool configure PORT: %s" % conf.serverPort)
-    log.info("ProxyPool configure DB_CONN: %s" % conf.dbConn)
-    log.info("ProxyPool configure PROXY_FETCHER: %s" % conf.fetch_funcs)
+    log.info("ProxyPool HOST: %s" % conf.serverHost)
+    log.info("ProxyPool PORT: %s" % conf.serverPort)
+    log.info("ProxyPool DB_CONN: %s" % conf.dbConn)
+    log.info("ProxyPool PROXY_FETCHER: %s" % conf.fetch_funcs)
 
 
 def __checkDBConfig():

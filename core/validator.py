@@ -24,11 +24,11 @@ def formatValidator(proxy):
 def httpTimeOutValidator(proxy):
     """ http检测超时 """
 
-    proxies = {"http": f"http://{proxy}", "https": f"https://{proxy}"}
+    proxies = {"http": f"http://{proxy}"}
     try:
         logger.debug(f'check {proxy} http validation')
         r = head(config.httpUrl, headers=HEADER, proxies=proxies, timeout=config.verifyTimeout)
-        return True if r.status_code == 200 else False
+        return True if (200 <= r.status_code <= 299) else False
     except Exception as e:
         logger.debug(e)
         return False
@@ -36,20 +36,22 @@ def httpTimeOutValidator(proxy):
 
 def httpsTimeOutValidator(proxy):
     """https检测超时"""
-    proxies = {"http": f"http://{proxy}", "https": f"https://{proxy}"}
+    proxies = {"https": f"https://{proxy}"}
     try:
         logger.debug(f'check {proxy} https validation')
         r = head(config.httpsUrl, headers=HEADER, proxies=proxies, timeout=config.verifyTimeout, verify=False)
-        return True if r.status_code == 200 else False
+        return True if (200 <= r.status_code <= 299)else False
     except Exception as e:
         logger.debug(e)
         return False
 
 
-HEADER = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:34.0) Gecko/20100101 Firefox/34.0',
-          'Accept': '*/*',
-          'Connection': 'keep-alive',
-          'Accept-Language': 'zh-CN,zh;q=0.8'}
+HEADER = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:34.0) Gecko/20100101 Firefox/34.0',
+    'Accept': '*/*',
+    'Connection': 'keep-alive',
+    'Accept-Language': 'zh-CN,zh;q=0.8'
+}
 
 
 class ProxyValidator:
@@ -59,7 +61,6 @@ class ProxyValidator:
 
     @classmethod
     def addPreValidator(cls, func):
-        print("ADD", func)
         cls.pre_validators.append(func)
         return func
 

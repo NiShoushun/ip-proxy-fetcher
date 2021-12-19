@@ -22,7 +22,7 @@ class WebRequest(object):
     @property
     def user_agent(self):
         """
-        return an User-Agent at random
+        返回1个随机代理
         :return:
         """
         ua_list = [
@@ -40,7 +40,7 @@ class WebRequest(object):
     @property
     def header(self):
         """
-        basic header
+        返回 http head
         :return:
         """
         return {'User-Agent': self.user_agent,
@@ -76,14 +76,23 @@ class WebRequest(object):
 
     @property
     def tree(self):
+        """
+        返回 html dom 树
+        """
         return etree.HTML(self.response.content)
 
     @property
     def text(self):
+        """
+        返回响应内容
+        """
         return self.response.text
 
     @property
     def json(self):
+        """
+        尝试对响应转化为json格式，并返回
+        """
         try:
             return self.response.json()
         except Exception as e:

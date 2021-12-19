@@ -5,21 +5,20 @@
   "connect":"redis://:123456@127.0.0.1:6379/0",
   "table_name": "default_pool",
   "proxy_src": [
-      "freeProxyFetcher01",
+    "freeProxyFetcher01",
     "freeProxyFetcher02",
     "freeProxyFetcher03",
     "freeProxyFetcher04",
     "freeProxyFetcher05",
     "freeProxyFetcher06",
     "freeProxyFetcher07"
-
   ],
 
   "http_test_url": "http://httpbin.org",
-  "https_test_url":"https://httpbin.org",
+  "https_test_url":"https://baidu.com",
 
   "verify_timeout": 10,
-  "max_fail_count": 0,
+  "max_fail_count": 2,
   "pool_size_min": 20,
 
   "max_cached_proxy_size ": 10000,

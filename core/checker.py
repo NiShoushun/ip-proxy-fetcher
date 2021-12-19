@@ -6,7 +6,7 @@ from threading import Thread
 from datetime import datetime
 
 from core.validator import ProxyValidator
-from core.DB_handle import ProxyDBHandler
+from core.dbhandler import DBHandler
 from util.logging import Logger
 from config.configuration import default_config as config
 from util import color
@@ -68,14 +68,14 @@ class IpProxyFilter(object):
         return True
 
 
-class _ThreadChecker(Thread):
+class CheckJob(Thread):
     """ 多线程检测 """
 
     def __init__(self, work_type, target_queue, thread_name):
         Thread.__init__(self, name=thread_name)
         self.work_type = work_type
         self.log = Logger("checker", level=config.log_level, file=config.log_to_file, color=color.GREEN)
-        self.proxy_handler = ProxyDBHandler()
+        self.proxy_handler = DBHandler()
         self.target_queue = target_queue
         self.conf = config
 
@@ -101,7 +101,8 @@ class _ThreadChecker(Thread):
         """
         if proxy.last_status:
             if self.proxy_handler.exists(proxy):
-                self.log.info('RawProxyCheck - {}: {} {}'.format(self.name, proxy.proxy.ljust(23), color.red('aleady in DB')))
+                self.log.info('RawProxyCheck - {}: {} {}'.format(self.name, proxy.proxy.ljust(23), color.red('already '
+                                                                                                             'in DB')))
             else:
                 self.log.info(
                     'RawProxyCheck - {}: {} {}'.format(self.name, proxy.proxy.ljust(23), color.yellow('pass')))
@@ -131,16 +132,16 @@ class _ThreadChecker(Thread):
                 self.proxy_handler.update(proxy)
 
 
-def Checker(tp, queue):
+def Checker(tp, proxyQueue):
     """
     run Proxy ThreadChecker
     :param tp: raw/use
-    :param queue: Proxy Queue
+    :param proxyQueue: Proxy Queue
     :return:
     """
     thread_list = list()
     for index in range(config.check_thread_num):
-        thread_list.append(_ThreadChecker(tp, queue, "thread_%s" % str(index).zfill(2)))
+        thread_list.append(CheckJob(tp, proxyQueue, "thread_%s" % str(index).zfill(2)))
 
     for thread in thread_list:
         thread.setDaemon(True)

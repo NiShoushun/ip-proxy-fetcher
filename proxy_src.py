@@ -102,7 +102,7 @@ def freeProxyFetcher05():
             try:
                 tree = WebRequest().get(url + f"{i}").tree
                 proxy_list = tree.xpath('.//table//tr')
-                sleep(1)  # 必须sleep 不然第二条请求不到数据
+                sleep(1)
                 for tree in proxy_list[1:]:
                     proxy = ':'.join(tree.xpath('./td/text()')[0:2])
                     anonymous = "".join(tree.xpath('./td[2]/text()')).strip()
@@ -174,7 +174,6 @@ def freeProxyFetcher08():
             anonymous = "".join(tree.xpath('./td[3]/text()')).strip()
             proxy_type = "".join(tree.xpath('./td[4]/text()')).strip()
             region = "".join(tree.xpath('./td[5]/text()')).strip()
-            print(ip,port,proxy,anonymous,proxy_type,region)
             yield proxy, proxy_type, anonymous, region
 
 

@@ -38,6 +38,7 @@ class RedisClient:
         self.username = username
         self.password = password
         self.db = db
+        self.logger = Logger('redis_client', file=config.log_to_file, color=color.red)
 
         self.__conn = Redis(connection_pool=BlockingConnectionPool(decode_responses=True,
                                                                    timeout=5,
@@ -49,16 +50,16 @@ class RedisClient:
                                                                    db=db,
                                                                    client_name=DEFAULT_POOL_NAME))
 
-    def get(self, https):
+    def get(self, ptype=None):
         """
         返回一个代理
-        :param https: 只使用https
+        :param ptype: 代理类型
         :return:
         """
-        if https:
+        if ptype:
             items = self.__conn.hvals(self.pool_name)
-            # 过滤出https类型的代理
-            proxies = list(filter(lambda x: json.loads(x).get("https"), items))
+            # 过滤出ptype类型的代理
+            proxies = self.getAll(ptype)
             return choice(proxies) if proxies else None
         else:
             proxies = self.__conn.hkeys(self.pool_name)
@@ -75,12 +76,12 @@ class RedisClient:
         data = self.__conn.hset(self.pool_name, proxy_obj.proxy, proxy_obj.to_json)
         return data
 
-    def pop(self, https):
+    def pop(self, ptype):
         """
         弹出一个代理
         :return: dict {proxy: value}
         """
-        proxy = self.get(https)
+        proxy = self.get(ptype)
         if proxy:
             self.__conn.hdel(self.pool_name, json.loads(proxy).get("proxy", ""))
         return proxy
@@ -109,14 +110,19 @@ class RedisClient:
         """
         return self.__conn.hset(self.pool_name, proxy_obj.proxy, proxy_obj.to_json)
 
-    def getAll(self, https):
+    def getAll(self, ptype=None):
         """
         字典形式返回所有代理, 使用changeTable指定hash name
         :return:
         """
         items = self.__conn.hvals(self.pool_name)
-        if https:
-            return list(filter(lambda x: json.loads(x).get("https"), items))
+        if ptype:
+            li = []
+            for item in items:
+                dic = json.loads(item)
+                if dic.get("type") == ptype:
+                    li.append(item)
+            return li
         else:
             return items
 
@@ -132,8 +138,11 @@ class RedisClient:
         返回代理数量
         :return:
         """
-        proxies = self.getAll(https=False)
-        return {'total': len(proxies), 'https': len(list(filter(lambda x: json.loads(x).get("https"), proxies)))}
+        proxies = self.getAll()
+        return {
+            'total': len(proxies),
+            'https': len(list(filter(lambda x: json.loads(x).get("type") == "https", proxies)))
+        }
 
     def checkoutTable(self, name):
         """
@@ -144,17 +153,17 @@ class RedisClient:
         self.pool_name = name
 
     def test(self):
-        log = Logger('redis_client', file=config.log_to_file, color=color.red)
+
         try:
             self.getCount()
         except exceptions.TimeoutError as e:
-            log.error('redis connection time out: %s' % str(e), exc_info=True)
+            self.logger.error('redis connection time out: %s' % str(e), exc_info=True)
             return e
         except exceptions.ConnectionError as e:
-            log.error('redis connection error: %s' % str(e), exc_info=True)
+            self.logger.error('redis connection error: %s' % str(e), exc_info=True)
             return e
         except exceptions.ResponseError as e:
-            log.error('redis connection error: %s' % str(e), exc_info=True)
+            self.logger.error('redis connection error: %s' % str(e), exc_info=True)
             return e
 
 

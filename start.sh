@@ -1,3 +1,3 @@
-#!/usr/bin/env bash
-python proxyPool.py server &
-python proxyPool.py schedule
+#!/usr/bin/bash
+./runserver.sh &
+./runsppider.sh

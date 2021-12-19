@@ -7,12 +7,12 @@ import proxy_src
 from core.proxy import Proxy
 from core.checker import IpProxyFilter
 from util.logging import Logger
-from core.DB_handle import ProxyDBHandler
+from core.dbhandler import DBHandler
 from config.configuration import default_config as config
 from util import color
 
 
-class _ThreadFetcher(Thread):
+class FetchJob(Thread):
     """
     通过开启线程运行proxyFetcher模块的抓取函数
     """
@@ -25,20 +25,20 @@ class _ThreadFetcher(Thread):
         self.fetch_func = getattr(proxy_src, fetch_source, None)
         self.log = Logger("fetcher", level=config.log_level, file=config.log_to_file, color=color.CYAN)
         self.conf = config
-        self.proxy_handler = ProxyDBHandler()
+        self.proxy_handler = DBHandler()
 
     def run(self):
         self.log.info("ProxyFetch - {func}: start".format(func=self.fetch_source))
         try:
-            for proxy, type, anonymous,region in self.fetch_func():
+            for proxy, ptype, anonymous, region in self.fetch_func():
                 self.log.info('fetch - %s get=> %s, %s, %s, %s' % (
-                self.fetch_source, proxy, type, anonymous, region))
+                    self.fetch_source, proxy, ptype, anonymous, region))
                 proxy = proxy.strip()
                 if proxy in self.proxy_dict:
                     self.proxy_dict[proxy].add_source(self.fetch_source)
                 else:
                     self.proxy_dict[proxy] = Proxy(
-                        proxy, source=self.fetch_source, anonymous=anonymous, type=type, region=region)
+                        proxy, source=self.fetch_source, anonymous=anonymous, ptype=ptype, region=region)
         except Exception as e:
             self.log.error("ProxyFetch - {func}: error".format(func=self.fetch_source))
             self.log.error(str(e))
@@ -70,7 +70,7 @@ class Fetcher(object):
             if not callable(fetcher):
                 self.log.error("ProxyFetch - {func}: must be class method".format(func=fetch_func))
                 continue
-            thread_list.append(_ThreadFetcher(fetch_func, proxy_dict))
+            thread_list.append(FetchJob(fetch_func, proxy_dict))
 
         # 开启线程列表中的线程
         for thread in thread_list:

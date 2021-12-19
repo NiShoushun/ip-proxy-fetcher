@@ -50,7 +50,7 @@ class Configuration:
 
     @LazyProperty
     def httpsUrl(self):
-        return self.__cfg.get('https_test_url', "https://httpbin.org")
+        return self.__cfg.get('https_test_url', "https://baidu.com")
 
     @LazyProperty
     def verifyTimeout(self):
