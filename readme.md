@@ -12,7 +12,7 @@
 
 > 注意：
 >
-> setting.json 中的数据库了连接url。
+> setting.json 中的数据库连接url。
 >
 > redis-server auth设置：
 >
