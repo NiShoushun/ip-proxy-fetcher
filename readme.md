@@ -8,11 +8,21 @@
 
 #### 启动程序
 
-修改项目跟目录下的 `setting.json` 配置文件。
+修改项目根目录下的 `setting.json` 配置文件。
 
-运行 `runspider.sh` 。
+> 注意：
+>
+> setting.json 中的数据库了连接url。
+>
+> redis-server auth设置：
+>
+> ```bash
+> config set requirepass 123456
+> ```
 
-运行 `runserver.sh` 。
+运行 `runspider.sh` 
+
+运行 `runserver.sh` 
 
 #### 请求代理ip
 
