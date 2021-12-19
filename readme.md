@@ -36,7 +36,7 @@
 | `/pop`    | 获取一个随机的代理，并从数据库中删除该代理 | `type`: 代理类型（`http` | `https`） |
 | `/delete` | 删除代理                                   | `proxy`: `ip:port`                   |
 
-#### 测试
+### 效果
 
 `runspider.sh`：
 
